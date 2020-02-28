@@ -19,6 +19,9 @@ class Notice():
     def deploy_task(self, project_info, notice_info):
         pass
 
+    def audit_task(self, project_info, notice_info):
+        pass
+
     @classmethod
     def task_url(cls, project_name, task_id):
         return '%s//%s/%s/task/deploy/%s' % ('https' if current_app.config.get('SSL') else 'http',

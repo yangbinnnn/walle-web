@@ -12,8 +12,10 @@ from flask import request, current_app, abort
 from walle.api.api import SecurityResource
 from walle.form.task import TaskForm
 from walle.model.task import TaskModel
+from walle.model.project import ProjectModel
 from walle.service.extensions import permission
 from walle.service.rbac.role import *
+from walle.service.notice import Notice
 
 
 class TaskAPI(SecurityResource):
@@ -73,6 +75,24 @@ class TaskAPI(SecurityResource):
             task_new_info = task_new.add(data)
             if not task_new_info:
                 return self.render_json(code=-1)
+
+            # 待审核
+            try:
+                if task_new_info['status'] == TaskModel.status_new:
+                    project_info = ProjectModel(id=task_new_info['project_id']).item()
+                    notice_info = {
+                        'title': '新上线单需要审核',
+                        'username': current_user.username,
+                        'project_name': project_info['name'],
+                        'task_name': '%s ([%s](%s))' % (task_new_info['name'], task_new_info['id'], Notice.task_url(project_name=project_info['name'], task_id=task_new_info['id'])),
+                        'branch': task_new_info['branch'],
+                        'commit': task_new_info['commit_id'],
+                        'tag': task_new_info['tag'],
+                        'repo_mode': project_info['repo_mode'],
+                    }
+                    Notice.create(Notice.by_dingding).audit_task(project_info, notice_info)
+            except:
+                pass
 
             return self.render_json(data=task_new_info)
         else:
