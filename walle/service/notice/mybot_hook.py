@@ -12,19 +12,19 @@ def is_mybot_hook(notice_hook):
 def _parser_hook_url(url):
     u = urlparse(url.replace('mybot://', 'http://'))
     query = u.query
-    u.query = ''
+    url = u.geturl().split('?')[0]
     qs = parse_qs(query)
     auditor = qs.get('auditor')[0].split(',')
     groupid = qs.get('groupid')[0]
     data = {
-        'url': u.geturl(),
+        'url': url,
         'auditor': auditor,
         'groupid': groupid,
     }
     return data
 
 
-def mybot_deploy_task(self, project_info, notice_info):
+def mybot_deploy_task(project_info, notice_info):
     if notice_info['repo_mode'] == ProjectModel.repo_mode_tag:
         version = notice_info['tag']
     else:
@@ -61,7 +61,7 @@ def mybot_deploy_task(self, project_info, notice_info):
     return True
 
 
-def mybot_audit_task(self, project_info, notice_info):
+def mybot_audit_task(project_info, notice_info):
     if notice_info['repo_mode'] == ProjectModel.repo_mode_tag:
         version = notice_info['tag']
     else:

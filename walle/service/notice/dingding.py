@@ -11,7 +11,7 @@ import json
 import requests
 from . import Notice
 from walle.model.project import ProjectModel
-from mybot_hook import is_mybot_hook, mybot_deploy_task
+from mybot_hook import is_mybot_hook, mybot_deploy_task, mybot_audit_task
 
 
 class Dingding(Notice):
