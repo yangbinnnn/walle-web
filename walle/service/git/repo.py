@@ -95,7 +95,8 @@ class Repo:
             os.makedirs(self.path)
         # git clone
         if self.is_git_dir():
-            self.checkout_2_branch(branch)
+            # 这里切换目录, 会导致deployer无法正确获取commit
+            # self.checkout_2_branch(branch)
             return self.pull()
         else:
             return self.clone(url)
