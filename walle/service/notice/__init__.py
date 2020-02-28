@@ -23,10 +23,10 @@ class Notice():
         pass
 
     @classmethod
-    def task_url(cls, project_name, task_id):
-        return '%s//%s/%s/task/deploy/%s' % ('https' if current_app.config.get('SSL') else 'http',
+    def task_url(cls, project_space, task_id):
+        return '%s://%s/%s/task/deploy/%s' % ('https' if current_app.config.get('SSL') else 'http',
                                              current_app.config.get('HOST'),
-                                             project_name, task_id)
+                                             project_space, task_id)
 
     @classmethod
     def create(cls, by):

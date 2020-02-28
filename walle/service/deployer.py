@@ -16,6 +16,7 @@ from flask_socketio import emit
 from walle.model.project import ProjectModel
 from walle.model.record import RecordModel
 from walle.model.task import TaskModel
+from walle.model.space import SpaceModel
 from walle.service.code import Code
 from walle.service.error import WalleError
 from walle.service.utils import color_clean
@@ -452,11 +453,17 @@ class Deployer:
                 'ex_link_id': self.previous_release_version,
             })
 
+            space_id = project_info['space_id']
+            space_info = SpaceModel(id=space_id).item()
+            task_url = Notice.task_url(project_space=space_info['name'], task_id=self.task_id)
             notice_info = {
                 'title': '',
                 'username': current_user.username,
                 'project_name': self.project_info['name'],
-                'task_name': '%s ([%s](%s))' % (self.taskMdl.get('name'), self.task_id, Notice.task_url(project_name=self.project_info['name'], task_id=self.task_id)),
+                'task_url': task_url,
+                'task_id': self.task_id,
+                'task_title': self.taskMdl.get('name'),
+                'task_name': self.taskMdl.get('name'),
                 'branch': self.taskMdl.get('branch'),
                 'commit': self.taskMdl.get('commit_id'),
                 'tag': self.taskMdl.get('tag'),
