@@ -453,7 +453,7 @@ class Deployer:
                 'ex_link_id': self.previous_release_version,
             })
 
-            space_id = project_info['space_id']
+            space_id = self.project_info['space_id']
             space_info = SpaceModel(id=space_id).item()
             task_url = Notice.task_url(project_space=space_info['name'], task_id=self.task_id)
             notice_info = {
